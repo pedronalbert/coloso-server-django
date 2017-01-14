@@ -47,3 +47,15 @@ def getMasteries(request, region, summonerId):
         return JsonResponse({ 'message': e.message }, status=404)
     except RiotServerError as e:
         return JsonResponse({ 'message': e.message }, status=500)
+
+def getStatsSummary(request, region, summonerId):
+    riotApi = RiotApi(region)
+    season = request.GET.get('season', 'SEASON2017')
+
+    try:
+        runesData = riotApi.getSummonerStatsSummary(summonerId, season)
+        return JsonResponse(runesData)
+    except NotFoundException as e:
+        return JsonResponse({ 'message': e.message }, status=404)
+    except RiotServerError as e:
+        return JsonResponse({ 'message': e.message }, status=500)

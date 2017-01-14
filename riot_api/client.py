@@ -63,7 +63,7 @@ def fetchSummonerRunes(region, summonerId):
         return {
             'summonerId': summonerId,
             'region': region,
-            'pages': groupPages
+            'pages': groupPages,
         }
     elif response.status_code == 404:
       raise NotFoundException('Invocador no encontrado')
@@ -82,5 +82,28 @@ def fetchSummonerMasteries(region, summonerId):
         return jsonResponse
     elif response.status_code == 404:
         raise NotFoundException('Maestrias no encontradas')
+    else:
+        raise RiotServerError
+
+def fetchSummonerStatsSummary(region, summonerId, season):
+    url = 'https://' + region + '.api.pvp.net/api/lol/' + region + '/v1.3/stats/by-summoner/' + summonerId + '/summary'
+    response = requests.get(url, params={'api_key': API_KEY, 'season': season})
+
+    if response.status_code == 200:
+        jsonResponse = response.json()
+
+        return {
+            'summonerId': summonerId,
+            'region': region,
+            'season': season,
+            'playerStatSummaries': jsonResponse['playerStatSummaries'],
+        }
+    elif response.status_code == 404:
+        return {
+            'summonerId': summonerId,
+            'region': region,
+            'season': season,
+            'playerStatSummaries': [],
+        }
     else:
         raise RiotServerError
