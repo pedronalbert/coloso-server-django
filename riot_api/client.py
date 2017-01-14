@@ -69,3 +69,18 @@ def fetchSummonerRunes(region, summonerId):
       raise NotFoundException('Invocador no encontrado')
     else:
       raise RiotServerError
+
+def fetchSummonerMasteries(region, summonerId):
+    url = 'https://' + region + '.api.pvp.net/api/lol/' + region + '/v1.4/summoner/' + summonerId + '/masteries'
+    response = requests.get(url, params={'api_key': API_KEY})
+
+    if response.status_code == 200:
+        jsonResponse = response.json()
+        jsonResponse = jsonResponse[summonerId]
+        jsonResponse['region'] = region
+
+        return jsonResponse
+    elif response.status_code == 404:
+        raise NotFoundException('Maestrias no encontradas')
+    else:
+        raise RiotServerError
