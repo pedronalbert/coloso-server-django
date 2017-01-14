@@ -1,4 +1,4 @@
-from .client import fetchSummonerByName, fetchSummonerById, fetchSummonerRunes, fetchSummonerMasteries, fetchSummonerStatsSummary, fetchSummonerChampionsMastery
+from .client import fetchSummonerByName, fetchSummonerById, fetchSummonerRunes, fetchSummonerMasteries, fetchSummonerStatsSummary, fetchSummonerChampionsMastery, fetchSummonerGamesRecent
 
 class RiotApi:
     def __init__(self, region):
@@ -21,3 +21,6 @@ class RiotApi:
 
     def getSummonerChampionsMastery(self, summonerId):
         return fetchSummonerChampionsMastery(self.region, summonerId)
+
+    def getSummonerGamesRecent(self, summonerId):
+        return fetchSummonerGamesRecent(self.region, summonerId)

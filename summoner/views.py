@@ -66,3 +66,14 @@ def getChampionsMastery(request, region, summonerId):
         return JsonResponse(masteries)
     except RiotServerError as e:
         return JsonResponse({ 'message': e.message }, status=500)
+
+def getGamesRecent(request, region, summonerId):
+    riotApi = RiotApi(region)
+
+    try:
+        gamesRecent = riotApi.getSummonerGamesRecent(summonerId)
+        return JsonResponse(gamesRecent)
+    except NotFoundException as e:
+        return JsonResponse({ 'message': e.message }, status=404)
+    except RiotServerError as e:
+        return JsonResponse({ 'message': e.message }, status=500)
