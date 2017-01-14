@@ -1,0 +1,5 @@
+# Django Recommended
+*.egg-info
+*.pot
+*.py[co]
+__pycache__
