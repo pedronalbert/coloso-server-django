@@ -88,3 +88,14 @@ def getLeagueEntry(request, region, summonerId):
         return JsonResponse({ 'message': e.message }, status=404)
     except RiotServerError as e:
         return JsonResponse({ 'message': e.message }, status=500)
+
+def getGameCurrent(request, region, summonerId):
+    riotApi = RiotApi(region)
+
+    try:
+        gameData = riotApi.getSummonerGameCurrent(summonerId)
+        return JsonResponse(gameData)
+    except NotFoundException as e:
+        return JsonResponse({ 'message': e.message }, status=404)
+    except RiotServerError as e:
+        return JsonResponse({ 'message': e.message }, status=500)

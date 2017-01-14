@@ -184,3 +184,31 @@ def fetchSummonerLeagueEntry(region, summonerId):
         }
     else:
         raise RiotServerError
+
+def fetchSummonersLeagueEntry(region, summonerIds):
+    url = 'https://' + region + '.api.pvp.net/api/lol/' + region + '/v2.5/league/by-summoner/' + ','.join(str(x) for x in summonerIds) + '/entry'
+    response = requests.get(url, params={'api_key': API_KEY})
+
+    if response.status_code == 200:
+        jsonResponse = response.json()
+
+        return jsonResponse
+    elif response.status_code == 404:
+        return {}
+    else:
+        raise RiotServerError
+
+def fetchSummonerGameCurrent(region, summonerId):
+    url = 'https://' + region + '.api.pvp.net/observer-mode/rest/consumer/getSpectatorGameInfo/' + regionToPlatform(region) + '/' + summonerId
+    response = requests.get(url, params={'api_key': API_KEY})
+
+    if response.status_code == 200:
+        jsonResponse = response.json()
+        jsonResponse['region'] = region
+        jsonResponse['focusSummonerId'] = summonerId
+
+        return jsonResponse
+    elif response.status_code == 404:
+        raise NotFoundException('El invocador no esta en juego')
+    else:
+        raise RiotServerError

@@ -1,4 +1,5 @@
-from .client import fetchSummonerByName, fetchSummonerById, fetchSummonerRunes, fetchSummonerMasteries, fetchSummonerStatsSummary, fetchSummonerChampionsMastery, fetchSummonerGamesRecent, fetchSummonerLeagueEntry
+from .client import fetchSummonerByName, fetchSummonerById, fetchSummonerRunes, fetchSummonerMasteries, fetchSummonerStatsSummary, fetchSummonerChampionsMastery, fetchSummonerGamesRecent, fetchSummonerLeagueEntry, fetchSummonerGameCurrent, fetchSummonersLeagueEntry
+from pydash.objects import has_path
 
 class RiotApi:
     def __init__(self, region):
@@ -27,3 +28,18 @@ class RiotApi:
 
     def getSummonerLeagueEntry(self, summonerId):
         return fetchSummonerLeagueEntry(self.region, summonerId)
+
+    def getSummonerGameCurrent(self, summonerId):
+        gameCurrent = fetchSummonerGameCurrent(self.region, summonerId)
+        summonerIds = []
+
+        for participant in gameCurrent['participants']:
+            summonerIds.append(participant['summonerId'])
+
+        leagueEntries = fetchSummonersLeagueEntry(self.region, summonerIds)
+
+        for participant in gameCurrent['participants']:
+            if has_path(leagueEntries, str(participant['summonerId'])):
+                participant['leagueEntries'] = leagueEntries[str(participant['summonerId'])]
+
+        return gameCurrent
