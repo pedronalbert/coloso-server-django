@@ -163,3 +163,24 @@ def fetchSummonerGamesRecent(region, summonerId):
         raise NotFoundException('Games recent not found')
     else:
         raise RiotServerError
+
+def fetchSummonerLeagueEntry(region, summonerId):
+    url = 'https://' + region + '.api.pvp.net/api/lol/' + region + '/v2.5/league/by-summoner/' + summonerId + '/entry'
+    response = requests.get(url, params={'api_key': API_KEY})
+
+    if response.status_code == 200:
+        jsonResponse = response.json()
+
+        return {
+            'summonerId': summonerId,
+            'region': region,
+            'entries': jsonResponse[summonerId],
+        }
+    elif response.status_code == 404:
+        return {
+            'summonerId': summonerId,
+            'region': region,
+            'entries': []
+        }
+    else:
+        raise RiotServerError
