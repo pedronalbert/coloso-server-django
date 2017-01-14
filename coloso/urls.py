@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^riot-api/(?P<region>\w{1,4})/summoner/(?P<summonerId>\d+)/runes$', summonerViews.getRunes),
     url(r'^riot-api/(?P<region>\w{1,4})/summoner/(?P<summonerId>\d+)/masteries$', summonerViews.getMasteries),
     url(r'^riot-api/(?P<region>\w{1,4})/summoner/(?P<summonerId>\d+)/stats/summary$', summonerViews.getStatsSummary),
+    url(r'^riot-api/(?P<region>\w{1,4})/summoner/(?P<summonerId>\d+)/champions-mastery$', summonerViews.getChampionsMastery),
 ]

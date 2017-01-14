@@ -41,8 +41,8 @@ def getMasteries(request, region, summonerId):
     riotApi = RiotApi(region)
 
     try:
-        runesData = riotApi.getSummonerMasteries(summonerId)
-        return JsonResponse(runesData)
+        masteries = riotApi.getSummonerMasteries(summonerId)
+        return JsonResponse(masteries)
     except NotFoundException as e:
         return JsonResponse({ 'message': e.message }, status=404)
     except RiotServerError as e:
@@ -53,9 +53,16 @@ def getStatsSummary(request, region, summonerId):
     season = request.GET.get('season', 'SEASON2017')
 
     try:
-        runesData = riotApi.getSummonerStatsSummary(summonerId, season)
-        return JsonResponse(runesData)
-    except NotFoundException as e:
-        return JsonResponse({ 'message': e.message }, status=404)
+        stats = riotApi.getSummonerStatsSummary(summonerId, season)
+        return JsonResponse(stats)
+    except RiotServerError as e:
+        return JsonResponse({ 'message': e.message }, status=500)
+
+def getChampionsMastery(request, region, summonerId):
+    riotApi = RiotApi(region)
+
+    try:
+        masteries = riotApi.getSummonerChampionsMastery(summonerId)
+        return JsonResponse(masteries)
     except RiotServerError as e:
         return JsonResponse({ 'message': e.message }, status=500)

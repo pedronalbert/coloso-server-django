@@ -5,6 +5,27 @@ from exceptions import NotFoundException, RiotServerError
 
 API_KEY = settings.RIOT_API_KEY
 
+def regionToPlatform(region):
+    if region == 'br':
+        return 'br1'
+    elif region == 'eune':
+        return 'eun1'
+    elif region == 'euw':
+        return 'euw1'
+    elif region == 'jp':
+        return 'jp1'
+    elif region == 'kr':
+        return 'kr'
+    elif region == 'lan':
+        return 'la1'
+    elif region == 'las':
+        return 'la2'
+    elif region == 'na':
+        return 'na1'
+    elif region == 'oce':
+        return 'oc1'
+    elif region == 'ru':
+        return 'ru'
 
 def fetchSummonerByName(region, summonerName):
     url = 'https://' + region + '.api.pvp.net/api/lol/' + region + '/v1.4/summoner/by-name/' + summonerName
@@ -104,6 +125,27 @@ def fetchSummonerStatsSummary(region, summonerId, season):
             'region': region,
             'season': season,
             'playerStatSummaries': [],
+        }
+    else:
+        raise RiotServerError
+
+def fetchSummonerChampionsMastery(region, summonerId):
+    url = 'https://' + region + '.api.pvp.net/championmastery/location/' + regionToPlatform(region) + '/player/' + summonerId + '/topchampions'
+    response = requests.get(url, params={'api_key': API_KEY, 'count': 200})
+
+    if response.status_code == 200:
+        jsonResponse = response.json()
+
+        return {
+            'summonerId': summonerId,
+            'region': region,
+            'masteries': jsonResponse,
+        }
+    elif response.status_code == 404:
+        return {
+            'summonerId': summonerId,
+            'region': region,
+            'masteries': [],
         }
     else:
         raise RiotServerError
